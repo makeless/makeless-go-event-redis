@@ -1,4 +1,4 @@
-package go_saas_event_redis
+package makeless_go_event_redis
 
 import (
 	"encoding/json"

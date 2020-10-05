@@ -1,4 +1,4 @@
-package go_saas_event_redis
+package makeless_go_event_redis
 
 import (
 	"log"
@@ -6,14 +6,14 @@ import (
 
 	"github.com/gin-contrib/sse"
 	"github.com/go-redis/redis/v8"
-	"github.com/go-saas/go-saas/event"
+	"github.com/makeless/makeless-go/event"
 )
 
 type Event struct {
 	Client *redis.Client
 	pubSub *redis.PubSub
 
-	BaseEvent go_saas_event.Event
+	BaseEvent makeless_go_event.Event
 	*sync.RWMutex
 }
 
@@ -82,7 +82,7 @@ func (event *Event) GetClient() *redis.Client {
 	return event.Client
 }
 
-func (event *Event) GetBaseEvent() go_saas_event.Event {
+func (event *Event) GetBaseEvent() makeless_go_event.Event {
 	event.RLock()
 	defer event.RUnlock()
 
@@ -93,7 +93,7 @@ func (event *Event) NewClientId() uint {
 	return event.GetBaseEvent().NewClientId()
 }
 
-func (event *Event) GetHub() go_saas_event.Hub {
+func (event *Event) GetHub() makeless_go_event.Hub {
 	return event.GetBaseEvent().GetHub()
 }
 

@@ -1,12 +1,11 @@
-module github.com/go-saas/go-saas-event-redis
-
-// replace github.com/go-saas/go-saas => /Users/lucasloffel/go/src/github.com/go-saas/go-saas
+module github.com/makeless/makeless-go-event-redis
 
 go 1.15
 
 require (
 	github.com/gin-contrib/sse v0.1.0
-	github.com/go-redis/redis/v8 v8.0.0-beta.9
-	github.com/go-saas/go-saas v0.0.0-20200902183615-818bb746862c
-	golang.org/x/exp v0.0.0-20200901203048-c4f52b2c50aa // indirect
+	github.com/go-redis/redis/v8 v8.2.3
+	github.com/makeless/makeless-go v0.0.0-20201005114136-ccedf8c95d34
+	go.opentelemetry.io/otel v0.12.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
