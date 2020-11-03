@@ -33,7 +33,7 @@ func (event *Event) setPubSub(pubSub *redis.PubSub) {
 
 func (event *Event) Init() error {
 	event.setPubSub(
-		event.GetClient().Subscribe(event.GetClient().Context(), "go-saas"),
+		event.GetClient().Subscribe(event.GetClient().Context(), "makeless"),
 	)
 
 	if _, err := event.getPubSub().Receive(event.GetClient().Context()); err != nil {
@@ -106,7 +106,7 @@ func (event *Event) Unsubscribe(userId uint, clientId uint) {
 }
 
 func (event *Event) Trigger(userId uint, channel string, id string, data interface{}) error {
-	return event.GetClient().Publish(event.GetClient().Context(), "go-saas", &Message{
+	return event.GetClient().Publish(event.GetClient().Context(), "makeless", &Message{
 		UserId:  userId,
 		Channel: channel,
 		Id:      id,
@@ -119,7 +119,7 @@ func (event *Event) TriggerError(err error) {
 }
 
 func (event *Event) Broadcast(channel string, id string, data interface{}) error {
-	return event.GetClient().Publish(event.GetClient().Context(), "go-saas", &Message{
+	return event.GetClient().Publish(event.GetClient().Context(), "makeless", &Message{
 		UserId:  0,
 		Channel: channel,
 		Id:      id,
