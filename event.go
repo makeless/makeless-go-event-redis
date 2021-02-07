@@ -89,7 +89,7 @@ func (event *Event) GetBaseEvent() makeless_go_event.Event {
 	return event.BaseEvent
 }
 
-func (event *Event) NewClientId() uint {
+func (event *Event) NewClientId() string {
 	return event.GetBaseEvent().NewClientId()
 }
 
@@ -97,11 +97,11 @@ func (event *Event) GetHub() makeless_go_event.Hub {
 	return event.GetBaseEvent().GetHub()
 }
 
-func (event *Event) Subscribe(userId uint, clientId uint) {
+func (event *Event) Subscribe(userId uint, clientId string) {
 	event.GetBaseEvent().Subscribe(userId, clientId)
 }
 
-func (event *Event) Unsubscribe(userId uint, clientId uint) {
+func (event *Event) Unsubscribe(userId uint, clientId string) {
 	event.GetBaseEvent().Unsubscribe(userId, clientId)
 }
 
@@ -127,7 +127,7 @@ func (event *Event) Broadcast(channel string, id string, data interface{}) error
 	}).Err()
 }
 
-func (event *Event) Listen(userId uint, clientId uint) chan sse.Event {
+func (event *Event) Listen(userId uint, clientId string) chan sse.Event {
 	return event.GetBaseEvent().Listen(userId, clientId)
 }
 
