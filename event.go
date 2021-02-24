@@ -1,7 +1,6 @@
 package makeless_go_event_redis
 
 import (
-	"log"
 	"sync"
 
 	"github.com/gin-contrib/sse"
@@ -10,11 +9,19 @@ import (
 )
 
 type Event struct {
+	Name   string
 	Client *redis.Client
 	pubSub *redis.PubSub
 
 	BaseEvent makeless_go_event.Event
 	*sync.RWMutex
+}
+
+func (event *Event) GetName() string {
+	event.RLock()
+	defer event.RUnlock()
+
+	return event.Name
 }
 
 func (event *Event) getPubSub() *redis.PubSub {
@@ -33,7 +40,7 @@ func (event *Event) setPubSub(pubSub *redis.PubSub) {
 
 func (event *Event) Init() error {
 	event.setPubSub(
-		event.GetClient().Subscribe(event.GetClient().Context(), "makeless"),
+		event.GetClient().Subscribe(event.GetClient().Context(), event.GetName()),
 	)
 
 	if _, err := event.getPubSub().Receive(event.GetClient().Context()); err != nil {
@@ -66,7 +73,6 @@ func (event *Event) Init() error {
 					}
 				}
 			case <-event.GetClient().Context().Done():
-				log.Printf("asdfadsf")
 				return
 			}
 		}
@@ -106,7 +112,7 @@ func (event *Event) Unsubscribe(userId uint, clientId string) {
 }
 
 func (event *Event) Trigger(userId uint, channel string, id string, data interface{}) error {
-	return event.GetClient().Publish(event.GetClient().Context(), "makeless", &Message{
+	return event.GetClient().Publish(event.GetClient().Context(), event.GetName(), &Message{
 		UserId:  userId,
 		Channel: channel,
 		Id:      id,
@@ -119,7 +125,7 @@ func (event *Event) TriggerError(err error) {
 }
 
 func (event *Event) Broadcast(channel string, id string, data interface{}) error {
-	return event.GetClient().Publish(event.GetClient().Context(), "makeless", &Message{
+	return event.GetClient().Publish(event.GetClient().Context(), event.GetName(), &Message{
 		UserId:  0,
 		Channel: channel,
 		Id:      id,
