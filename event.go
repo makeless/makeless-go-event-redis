@@ -15,7 +15,7 @@ type Event struct {
 	Password string
 	Db       int
 
-	Client *redis.Client
+	client *redis.Client
 	pubSub *redis.PubSub
 
 	BaseEvent makeless_go_event.Event
@@ -125,14 +125,14 @@ func (event *Event) GetClient() *redis.Client {
 	event.RLock()
 	defer event.RUnlock()
 
-	return event.Client
+	return event.client
 }
 
 func (event *Event) setClient(client *redis.Client) {
 	event.RLock()
 	defer event.RUnlock()
 
-	event.Client = client
+	event.client = client
 }
 
 func (event *Event) GetBaseEvent() makeless_go_event.Event {
