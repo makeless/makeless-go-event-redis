@@ -1,6 +1,7 @@
 package makeless_go_event_redis
 
 import (
+	"context"
 	"sync"
 
 	"github.com/gin-contrib/sse"
@@ -9,7 +10,11 @@ import (
 )
 
 type Event struct {
-	Name   string
+	Name     string
+	Addr     string
+	Password string
+	Db       int
+
 	Client *redis.Client
 	pubSub *redis.PubSub
 
@@ -22,6 +27,27 @@ func (event *Event) GetName() string {
 	defer event.RUnlock()
 
 	return event.Name
+}
+
+func (event *Event) getAddr() string {
+	event.RLock()
+	defer event.RUnlock()
+
+	return event.Addr
+}
+
+func (event *Event) getDb() int {
+	event.RLock()
+	defer event.RUnlock()
+
+	return event.Db
+}
+
+func (event *Event) getPassword() string {
+	event.RLock()
+	defer event.RUnlock()
+
+	return event.Password
 }
 
 func (event *Event) getPubSub() *redis.PubSub {
@@ -39,6 +65,20 @@ func (event *Event) setPubSub(pubSub *redis.PubSub) {
 }
 
 func (event *Event) Init() error {
+	client := redis.NewClient(&redis.Options{
+		Addr:     event.getAddr(),
+		Password: event.getPassword(),
+		DB:       event.getDb(),
+	})
+
+	_, err := client.Ping(context.Background()).Result()
+
+	if err != nil {
+		return err
+	}
+
+	event.setClient(client)
+
 	event.setPubSub(
 		event.GetClient().Subscribe(event.GetClient().Context(), event.GetName()),
 	)
@@ -86,6 +126,13 @@ func (event *Event) GetClient() *redis.Client {
 	defer event.RUnlock()
 
 	return event.Client
+}
+
+func (event *Event) setClient(client *redis.Client) {
+	event.RLock()
+	defer event.RUnlock()
+
+	event.Client = client
 }
 
 func (event *Event) GetBaseEvent() makeless_go_event.Event {
