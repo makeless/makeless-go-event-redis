@@ -99,12 +99,12 @@ func (event *Event) Init() error {
 
 				switch message.UserId {
 				case 0:
-					if err := event.Broadcast(message.GetEventData().GetChannel(), message.GetEventData().GetId(), message.GetEventData().GetData()); err != nil {
+					if err := event.Event.Broadcast(message.GetEventData().GetChannel(), message.GetEventData().GetId(), message.GetEventData().GetData()); err != nil {
 						event.TriggerError(err)
 						continue
 					}
 				default:
-					if err := event.Trigger(message.GetUserId(), message.GetEventData().GetChannel(), message.GetEventData().GetId(), message.GetEventData().GetData()); err != nil {
+					if err := event.Event.Trigger(message.GetUserId(), message.GetEventData().GetChannel(), message.GetEventData().GetId(), message.GetEventData().GetData()); err != nil {
 						event.TriggerError(err)
 						continue
 					}
