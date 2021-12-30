@@ -2,13 +2,13 @@ package makeless_go_event_redis
 
 import (
 	"encoding/json"
-	"github.com/makeless/makeless-go/event"
+	"github.com/makeless/makeless-go/event/basic"
 	"sync"
 )
 
 type Message struct {
-	UserId    uint                        `json:"userId"` // 0: broadcast
-	EventData makeless_go_event.EventData `json:"eventData"`
+	UserId    uint                               `json:"userId"` // 0: broadcast
+	EventData *makeless_go_event_basic.EventData `json:"eventData"`
 
 	*sync.RWMutex
 }
@@ -20,7 +20,7 @@ func (message *Message) GetUserId() uint {
 	return message.UserId
 }
 
-func (message *Message) GetEventData() makeless_go_event.EventData {
+func (message *Message) GetEventData() *makeless_go_event_basic.EventData {
 	message.RLock()
 	defer message.RUnlock()
 

@@ -87,6 +87,9 @@ func (event *Event) Init() error {
 			case channel := <-event.getPubSub().Channel():
 				var message = &Message{
 					RWMutex: new(sync.RWMutex),
+					EventData: &makeless_go_event_basic.EventData{
+						RWMutex: new(sync.RWMutex),
+					},
 				}
 
 				if err := message.UnmarshalBinary([]byte(channel.Payload)); err != nil {
@@ -136,7 +139,9 @@ func (event *Event) Trigger(userId uint, channel string, id string, data interfa
 			Channel: channel,
 			Id:      id,
 			Data:    data,
+			RWMutex: new(sync.RWMutex),
 		},
+		RWMutex: new(sync.RWMutex),
 	}).Err()
 }
 
@@ -147,6 +152,8 @@ func (event *Event) Broadcast(channel string, id string, data interface{}) error
 			Channel: channel,
 			Id:      id,
 			Data:    data,
+			RWMutex: new(sync.RWMutex),
 		},
+		RWMutex: new(sync.RWMutex),
 	}).Err()
 }
